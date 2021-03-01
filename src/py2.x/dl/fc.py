@@ -100,7 +100,7 @@ class Network(object):
         rate: 学习速率
         epoch: 训练轮数
         '''
-        for i in range(epoch):
+        for _ in range(epoch):
             for d in range(len(data_set)):
                 self.train_one_sample(labels[d], 
                     data_set[d], rate)
@@ -191,7 +191,7 @@ def train_data_set():
     normalizer = Normalizer()
     data_set = []
     labels = []
-    for i in range(0, 256):
+    for i in range(256):
         n = normalizer.norm(i)
         data_set.append(n)
         labels.append(n)

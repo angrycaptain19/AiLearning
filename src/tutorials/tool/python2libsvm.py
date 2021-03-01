@@ -16,23 +16,20 @@ def get_data(file_input, separator='\t'):
 def other2libsvm(file_name, separator='\t'):
 
     libsvm_name = file_name.replace('.txt', '.libsvm_tmp')
-    libsvm_data = open(libsvm_name, 'w')
+    with open(libsvm_name, 'w') as libsvm_data:
+        with open(file_name, 'r') as file_data:
+            for line in file_data.readlines():
+                features = line.strip().split(separator)
+                # print len(features)
+                class_data = features[-1]
+                svm_format = ''.join(
+                    " %d:%s" % (i + 1, features[i])
+                    for i in range(len(features) - 1)
+                )
 
-    file_data = open(file_name, 'r')
-    for line in file_data.readlines():
-        features = line.strip().split(separator)
-        # print len(features)
-        class_data = features[-1]
-        svm_format = ''
-        for i in range(len(features)-1):
-            svm_format += " %d:%s" % (i+1, features[i])
-            # print svm_format
-        svm_format = "%s%s\n" % (class_data, svm_format)
-        # print svm_format
-        libsvm_data.write(svm_format)
-    file_data.close()
-
-    libsvm_data.close()
+                svm_format = "%s%s\n" % (class_data, svm_format)
+                # print svm_format
+                libsvm_data.write(svm_format)
     return libsvm_name
 
 

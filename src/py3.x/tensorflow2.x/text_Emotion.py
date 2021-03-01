@@ -187,8 +187,7 @@ class EmotionModel(object):
         words = [word for word in jieba.cut(str(line), cut_all=False) if word not in STOPWORDS]
         indexs = [word_index.get(word, 0) for word in words]
         x_pred = pad_sequences([indexs], maxlen=self.MAX_SEQUENCE_LENGTH)
-        res = self.model.predict(x_pred, verbose=0)[0]
-        return res
+        return self.model.predict(x_pred, verbose=0)[0]
 
     def load_data(self, word_index, vocab_list, test_size=0.25):
         STOPWORDS = ["-", "\t", "\n", ".", "。", ",", "，", ";", "!", "！", "?", "？", "%"]
@@ -199,8 +198,7 @@ class EmotionModel(object):
         def func(line):
             # 将文本 ['1, 2, 3', '1, 2, .., n'] 分解为: [[1, 2, 3], [1, 2, .., n]]
             words = [word for word in jieba.cut(str(line), cut_all=False) if word not in STOPWORDS]
-            indexs = [word_index.get(word, 0) for word in words]
-            return indexs
+            return [word_index.get(word, 0) for word in words]
 
         df = pd.read_excel(self.data_file, header=0, error_bad_lines=False, encoding="utf_8_sig")
         x = df["comment"].apply(lambda line: func(line)).tolist()

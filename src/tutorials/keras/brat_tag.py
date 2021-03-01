@@ -102,7 +102,7 @@ def brat_1_format_origin(catalog):
 
 def brat_2_create_train_data(catalog):
     file_list = get_catalog_files("%s/tag_after" % catalog, status=-1, str1=".DS_Store")
-    file_list = list(set([i.split("/")[-1].split(".")[0] for i in file_list]))
+    file_list = list({i.split("/")[-1].split(".")[0] for i in file_list})
     print(file_list)
     for filename in file_list:
         r_ann_path = os.path.join(catalog, "tag_after/%s.ann" % filename)

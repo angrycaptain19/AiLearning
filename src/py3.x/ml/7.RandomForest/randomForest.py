@@ -191,7 +191,7 @@ def bagging_predict(trees, row):
 
 
 # Create a random subsample from the dataset with replacement
-def subsample(dataset, ratio):   # 创建数据集的随机子样本
+def subsample(dataset, ratio):    # 创建数据集的随机子样本
     """random_forest(评估算法性能，返回模型得分)
 
     Args:
@@ -201,7 +201,7 @@ def subsample(dataset, ratio):   # 创建数据集的随机子样本
         sample          随机抽样的训练样本
     """
 
-    sample = list()
+    sample = []
     # 训练样本的按比例抽样。
     # round() 方法返回浮点数x的四舍五入值。
     n_sample = round(len(dataset) * ratio)
@@ -244,10 +244,7 @@ def random_forest(train, test, max_depth, min_size, sample_size, n_trees, n_feat
 
 # Calculate accuracy percentage
 def accuracy_metric(actual, predicted):  # 导入实际值和预测值，计算精确度
-    correct = 0
-    for i in range(len(actual)):
-        if actual[i] == predicted[i]:
-            correct += 1
+    correct = sum(actual[i] == predicted[i] for i in range(len(actual)))
     return correct / float(len(actual)) * 100.0
 
 
@@ -266,7 +263,7 @@ def evaluate_algorithm(dataset, algorithm, n_folds, *args):
 
     # 将数据集进行抽重抽样 n_folds 份，数据可以重复重复抽取，每一次 list 的元素是无重复的
     folds = cross_validation_split(dataset, n_folds)
-    scores = list()
+    scores = []
     # 每次循环从 folds 从取出一个 fold 作为测试集，其余作为训练集，遍历整个 folds ，实现交叉验证
     for fold in folds:
         train_set = list(folds)
@@ -284,7 +281,7 @@ def evaluate_algorithm(dataset, algorithm, n_folds, *args):
         Out[26]: [[1, 2, 'a'], [11, 22, 'b'], [3, 4, 'c'], [33, 44, 'd']]
         """
         train_set = sum(train_set, [])
-        test_set = list()
+        test_set = []
         # fold 表示从原始数据集 dataset 提取出来的测试集
         for row in fold:
             row_copy = list(row)

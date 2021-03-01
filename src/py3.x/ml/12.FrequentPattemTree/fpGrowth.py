@@ -39,23 +39,22 @@ class treeNode:
 
 
 def loadSimpDat():
-    simpDat = [['r', 'z', 'h', 'j', 'p'],
+    return [['r', 'z', 'h', 'j', 'p'],
                ['z', 'y', 'x', 'w', 'v', 'u', 't', 's'],
                ['z'],
                ['r', 'x', 'n', 'o', 's'],
             #    ['r', 'x', 'n', 'o', 's'],
                ['y', 'r', 'x', 'z', 'q', 't', 'p'],
                ['y', 'z', 'x', 'e', 'q', 's', 't', 'm']]
-    return simpDat
 
 
 def createInitSet(dataSet):
     retDict = {}
     for trans in dataSet:
-        if frozenset(trans) not in retDict.keys():
-            retDict[frozenset(trans)] = 1
-        else:
+        if frozenset(trans) in retDict:
             retDict[frozenset(trans)] += 1
+        else:
+            retDict[frozenset(trans)] = 1
     return retDict
 
 

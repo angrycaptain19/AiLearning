@@ -78,7 +78,7 @@ def gradAscent(dataMatIn, classLabels):
     # 生成一个长度和特征数相同的矩阵，此处n为3 -> [[1],[1],[1]]
     # weights 代表回归系数， 此处的 ones((n,1)) 创建一个长度和特征数相同的矩阵，其中的数全部都是 1
     weights = ones((n, 1))
-    for k in range(maxCycles):  # heavy on matrix operations
+    for _ in range(maxCycles):  # heavy on matrix operations
         # m*3 的矩阵 * 3*1 的单位矩阵 ＝ m*1的矩阵
         # 那么乘上单位矩阵的意义，就代表: 通过公式得到的理论值
         # 参考地址:  矩阵乘法的本质是什么？ https://www.zhihu.com/question/21351965/answer/31050145
@@ -259,9 +259,7 @@ def colicTest():
     # trainingSet 中存储训练数据集的特征，trainingLabels 存储训练数据集的样本对应的分类标签
     for line in frTrain.readlines():
         currLine = line.strip().split('\t')
-        lineArr = []
-        for i in range(21):
-            lineArr.append(float(currLine[i]))
+        lineArr = [float(currLine[i]) for i in range(21)]
         trainingSet.append(lineArr)
         trainingLabels.append(float(currLine[21]))
     # 使用 改进后的 随机梯度下降算法 求得在此数据集上的最佳回归系数 trainWeights
@@ -273,9 +271,7 @@ def colicTest():
     for line in frTest.readlines():
         numTestVec += 1.0
         currLine = line.strip().split('\t')
-        lineArr = []
-        for i in range(21):
-            lineArr.append(float(currLine[i]))
+        lineArr = [float(currLine[i]) for i in range(21)]
         if int(classifyVector(array(lineArr), trainWeights)) != int(
                 currLine[21]):
             errorCount += 1
@@ -288,7 +284,7 @@ def colicTest():
 def multiTest():
     numTests = 10
     errorSum = 0.0
-    for k in range(numTests):
+    for _ in range(numTests):
         errorSum += colicTest()
     print("after %d iterations the average error rate is: %f" % (numTests, errorSum / float(numTests)))
 

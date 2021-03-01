@@ -56,7 +56,7 @@ def Coverage(train, test, N):
 
 # 新颖度
 def Popularity(train, test, N):
-    item_popularity = dict()
+    item_popularity = {}
     for user, items in train.items():
         for item in items.keys():
             if item not in item_popularity:

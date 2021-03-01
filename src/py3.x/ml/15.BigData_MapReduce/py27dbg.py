@@ -12,7 +12,6 @@ from numpy import *
 class MRsvm(MRJob):
                                                  
     def map(self, mapperId, inVals): #needs exactly 2 arguments
-        if False: yield
         yield (1, 22)
 
     def reduce(self, _, packedVals):

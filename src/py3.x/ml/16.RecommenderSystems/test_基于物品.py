@@ -4,8 +4,8 @@ from operator import itemgetter
 
 def ItemSimilarity1(train):
     #calculate co-rated users between items
-    C = dict()
-    N = dict()
+    C = {}
+    N = {}
     for u, items in train.items():
         for i in users:
             N[i] += 1
@@ -24,8 +24,8 @@ def ItemSimilarity1(train):
 
 def ItemSimilarity2(train):
     #calculate co-rated users between items
-    C = dict()
-    N = dict()
+    C = {}
+    N = {}
     for u, items in train.items():
         for i in users:
             N[i] += 1
@@ -43,7 +43,7 @@ def ItemSimilarity2(train):
 
 
 def Recommendation1(train, user_id, W, K):
-    rank = dict()
+    rank = {}
     ru = train[user_id]
     for i,pi in ru.items():
         for j, wj in sorted(W[i].items(), key=itemgetter(1), reverse=True)[0:K]:
@@ -54,7 +54,7 @@ def Recommendation1(train, user_id, W, K):
 
 
 def Recommendation2(train, user_id, W, K):
-    rank = dict()
+    rank = {}
     ru = train[user_id]
     for i,pi in ru.items():
         for j, wj in sorted(W[i].items(), key=itemgetter(1), reverse=True)[0:K]:

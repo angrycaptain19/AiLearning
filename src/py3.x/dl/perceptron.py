@@ -61,9 +61,7 @@ class Perceptron(object):
         # zip() 接收任意多个（包括 0 个和 1个）序列作为参数，返回一个 tuple 列表。例: x = [1,2,3] y = [4,5,6] z = [7,8,9] xyz = zip(x, y, z) ===> [(1,4,7), (2,5,8), (3,6,9)]
 
         pack = zip(input_vec,self.weights)
-        multi = []
-        for (x,w) in pack:
-            multi.append(x*w)
+        multi = [x*w for (x,w) in pack]
         activtion = reduce(add, multi)
         # 此处python3 lambda无法传入一个tuple的两个变量，因此将tuple当作一个整体，tp[0]为input_vec,tp[1]为self.weights
         return self.activator(activtion + self.bias)
@@ -82,7 +80,7 @@ class Perceptron(object):
         Returns:
             None
         '''
-        for i in range(iteration):
+        for _ in range(iteration):
             self._one_iteration(input_vecs,labels,rate)
 
     def _one_iteration(self,input_vecs,labels,rate):
@@ -118,15 +116,13 @@ class Perceptron(object):
             None
         '''
         # 利用感知器规则更新权重
-        
+
         delta = labels -output
         # map() 接收一个函数 f 和一个 list ，并通过把函数 f 依次作用在 list 的每个元素上，得到一个新的 list 返回。比如我们的 f 函数是计算平方， map(f, [1,2,3,4,5]) ===> 返回 [1,4,9,16,25]
         # zip() 接收任意多个（包括 0 个和 1个）序列作为参数，返回一个 tuple 列表。例: x = [1,2,3] y = [4,5,6] z = [7,8,9] xyz = zip(x, y, z) ===> [(1,4,7), (2,5,8), (3,6,9)]
         # 此处python3必须对map函数进行list操作，不然 self.weights为map类型，最后无法打印出具体数值
         pack  = zip(input_vecs,self.weights)
-        tmp = []
-        for (x,w) in pack:
-            tmp.append(w+x*delta*rate)
+        tmp = [w+x*delta*rate for (x,w) in pack]
         self.weights = tmp
         # 更新 bias
         self.bias = self.bias + delta*rate

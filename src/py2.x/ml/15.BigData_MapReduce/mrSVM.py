@@ -84,7 +84,7 @@ class MRsvm(MRJob):
             yield (mapperNum, ['w', wMat.tolist()[0]])    # 发出 w
             if self.t < self.options.iterations:
                 yield (mapperNum, ['t', self.t+1])        # 增量 T
-                for j in range(self.k/self.numMappers):   # emit random ints for mappers iid
+                for _ in range(self.k/self.numMappers):   # emit random ints for mappers iid
                     yield (mapperNum, ['x', random.randint(shape(self.data)[0])])
 
     def steps(self):

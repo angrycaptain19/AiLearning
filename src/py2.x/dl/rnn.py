@@ -59,7 +59,7 @@ class RecurrentLayer(object):
 
     def calc_delta(self, sensitivity_array, activator):
         self.delta_list = []  # 用来保存各个时刻的误差项
-        for i in range(self.times):
+        for _ in range(self.times):
             self.delta_list.append(np.zeros(
                 (self.state_width, 1)))
         self.delta_list.append(sensitivity_array)
@@ -80,7 +80,7 @@ class RecurrentLayer(object):
 
     def calc_gradient(self):
         self.gradient_list = [] # 保存各个时刻的权重梯度
-        for t in range(self.times + 1):
+        for _ in range(self.times + 1):
             self.gradient_list.append(np.zeros(
                 (self.state_width, self.state_width)))
         for t in range(self.times, 0, -1):

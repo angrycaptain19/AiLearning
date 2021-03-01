@@ -5,7 +5,7 @@ import random
 def RandSelectNegativeSamples(self, items):
     ret = {key: 1 for key in items}
     n = 0
-    for i in range(0, len(items) * 3):
+    for _ in range(len(items) * 3):
         item = items_pool[random.randint(0, len(items_pool) - 1)]
         if item in ret:
             continue
@@ -18,19 +18,19 @@ def RandSelectNegativeSamples(self, items):
 
 def LatentFactorModel(user_items, F, N, alpha, _lambda):
     [P, Q] = InitModel(user_items, F)
-    for step in range(0, N):
+    for _ in range(N):
         for user, items in user_items.items():
             samples = RandSelectNegativeSamples(items)
             for item, rui in samples.items():
                 eui = rui - Predict(user, item)
-                for f in range(0, F):
+                for f in range(F):
                     P[user][f] += alpha * (eui * Q[item][f] - _lambda * P[user][f])
                     Q[item][f] += alpha * (eui * P[user][f] - _lambda * Q[item][f])
         alpha *= 0.9
 
 
 def Recommend(user, P, Q):
-    rank = dict()
+    rank = {}
     for f, puf in P[user].items():
         for i, qfi in Q[f].items():
             if i not in rank:

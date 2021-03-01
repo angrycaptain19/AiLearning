@@ -2,7 +2,7 @@ import math
 from operator import itemgetter
 
 def UserSimilarity1(train):
-    W = dict()
+    W = {}
     for u in train.keys():
         for v in train.keys():
             if u == v:
@@ -22,8 +22,8 @@ def UserSimilarity2(train):
             item_users[i].add(u)
 
     #calculate co-rated items between users
-    C = dict()
-    N = dict()
+    C = {}
+    N = {}
     for i, users in item_users.items():
         for u in users:
             N[u] += 1
@@ -33,7 +33,7 @@ def UserSimilarity2(train):
                 C[u][v] += 1
 
     #calculate finial similarity matrix W
-    W = dict()
+    W = {}
     for u, related_users in C.items():
         for v, cuv in related_users.items():
             W[u][v] = cuv / math.sqrt(N[u] * N[v])
@@ -50,8 +50,8 @@ def UserSimilarity3(train):
             item_users[i].add(u)
 
     #calculate co-rated items between users
-    C = dict()
-    N = dict()
+    C = {}
+    N = {}
     for i, users in item_users.items():
         for u in users:
             N[u] += 1
@@ -61,7 +61,7 @@ def UserSimilarity3(train):
                 C[u][v] += 1 / math.log(1 + len(users))
 
     #calculate finial similarity matrix W
-    W = dict()
+    W = {}
     for u, related_users in C.items():
         for v, cuv in related_users.items():
             W[u][v] = cuv / math.sqrt(N[u] * N[v])
@@ -69,7 +69,7 @@ def UserSimilarity3(train):
 
 
 def Recommend(user, train, W):
-    rank = dict()
+    rank = {}
     interacted_items = train[user]
     for v, wuv in sorted(W[u].items, key=itemgetter(1), reverse=True)[0:K]:
         for i, rvi in train[v].items:

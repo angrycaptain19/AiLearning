@@ -29,7 +29,7 @@ def createC1(dataSet):
     C1 = []
     for transaction in dataSet:
         for item in transaction:
-            if not [item] in C1:
+            if [item] not in C1:
                 # 遍历所有的元素，如果不在 C1 出现过，那么就 append
                 C1.append([item])
     # 对数组进行 `从小到大` 的排序
@@ -250,7 +250,10 @@ def getActionIds():
         try:
             billDetail = votesmart.votes.getBill(billNum) # api call
             for action in billDetail.actions:
-                if action.level == 'House' and (action.stage == 'Passage' or action.stage == 'Amendment Vote'):
+                if action.level == 'House' and action.stage in [
+                    'Passage',
+                    'Amendment Vote',
+                ]:
                     actionId = int(action.actionId)
                     print('bill: %d has actionId: %d' % (billNum, actionId))
                     actionIdList.append(actionId)

@@ -63,7 +63,7 @@ def grad_ascent(data_arr, class_labels):
     # 生成一个长度和特征数相同的矩阵，此处n为3 -> [[1],[1],[1]]
     # weights 代表回归系数， 此处的 ones((n,1)) 创建一个长度和特征数相同的矩阵，其中的数全部都是 1
     weights = np.ones((n, 1))
-    for k in range(max_cycles):
+    for _ in range(max_cycles):
         # 这里是点乘  m x 3 dot 3 x 1
         h = sigmoid(data_mat * weights)
         error = label_mat - h
@@ -231,9 +231,7 @@ def multi_test():
     :return: nothing 
     """
     num_tests = 10
-    error_sum = 0
-    for k in range(num_tests):
-        error_sum += colic_test()
+    error_sum = sum(colic_test() for _ in range(num_tests))
     print('after {} iteration the average error rate is {}'.format(num_tests, error_sum / num_tests))
 
 

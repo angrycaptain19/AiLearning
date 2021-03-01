@@ -75,7 +75,7 @@ word_index["<UNUSED>"] = 3
 reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])
 
 def decode_review(text):
-    return ' '.join([reverse_word_index.get(i, '?') for i in text])
+    return ' '.join(reverse_word_index.get(i, '?') for i in text)
 
 """现在我们可以使用 `decode_review` 函数来显示首条评论的文本: """
 

@@ -1,5 +1,5 @@
 def PersonalRank(G, alpha, root):
-    rank = dict()
+    rank = {}
     rank = {x: 0 for x in G.keys()}
     rank[root] = 1
     for _ in range(20):

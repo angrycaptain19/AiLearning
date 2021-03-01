@@ -74,7 +74,7 @@ class Perceptron():
         Returns:
             None
         '''
-        for i in range(iteration):
+        for _ in range(iteration):
             self._one_iteration(input_vecs, labels, rate)
 
     

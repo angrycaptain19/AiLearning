@@ -195,8 +195,7 @@ def ridgeRegres(xMat, yMat, lam=0.2):
     if linalg.det(denom) == 0.0:
         print("This matrix is singular, cannot do inverse")
         return
-    ws = denom.I * (xMat.T * yMat)
-    return ws
+    return denom.I * (xMat.T * yMat)
 
 
 def ridgeTest(xArr, yArr):
@@ -316,9 +315,7 @@ def searchForSet(retX, retY, setNum, yr, numPce, origPrc):
     for i in range(len(retDict['items'])):
         try:
             currItem = retDict['items'][i]
-            if currItem['product']['condition'] == 'new':
-                newFlag = 1
-            else: newFlag = 0
+            newFlag = 1 if currItem['product']['condition'] == 'new' else 0
             listOfInv = currItem['product']['inventories']
             for item in listOfInv:
                 sellingPrice = item['price']

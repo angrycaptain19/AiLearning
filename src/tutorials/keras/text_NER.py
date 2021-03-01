@@ -70,9 +70,9 @@ def _parse_data(filename):
 def _process_data(data, vocab, chunk_tags, maxlen=None, onehot=False):
     if maxlen is None:
         maxlen = max(len(s) for s in data)
-    
+
     # 对每个字进行编码
-    word2idx = dict((w, i) for i, w in enumerate(vocab))
+    word2idx = {w: i for i, w in enumerate(vocab)}
     # 如果不在 vocab里面，就给 unk 值为 1
     x = [[word2idx.get(w[0].lower(), 1) for w in s] for s in data]
     y_chunk = [[chunk_tags.index(w[1])  for w in s] for s in data]
@@ -91,7 +91,7 @@ def _process_data(data, vocab, chunk_tags, maxlen=None, onehot=False):
 
 
 def process_data(data, vocab, maxlen=100):
-    word2idx = dict((w, i) for i, w in enumerate(vocab))
+    word2idx = {w: i for i, w in enumerate(vocab)}
     x = [word2idx.get(w[0].lower(), 1) for w in data]
     length = len(x)
     x = pad_sequences([x], maxlen)  # left padding
