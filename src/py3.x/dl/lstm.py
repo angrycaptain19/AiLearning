@@ -49,10 +49,7 @@ class LstmLayer(object):
         '''
         初始化保存状态的向量
         '''
-        state_vec_list = []
-        state_vec_list.append(np.zeros(
-            (self.state_width, 1)))
-        return state_vec_list
+        return [np.zeros((self.state_width, 1))]
 
     def init_weight_mat(self):
         '''
@@ -99,8 +96,7 @@ class LstmLayer(object):
         '''
         h = self.h_list[self.times - 1] # 上次的LSTM输出
         net = np.dot(Wh, h) + np.dot(Wx, x) + b
-        gate = activator.forward(net)
-        return gate
+        return activator.forward(net)
 
 
     def backward(self, x, delta_h, activator):
@@ -146,11 +142,8 @@ class LstmLayer(object):
         '''
         初始化误差项
         '''
-        delta_list = []
-        for i in range(self.times + 1):
-            delta_list.append(np.zeros(
-                (self.state_width, 1)))
-        return delta_list
+        return [np.zeros(
+                (self.state_width, 1)) for _ in range(self.times + 1)]
 
     def calc_delta_k(self, k):
         '''

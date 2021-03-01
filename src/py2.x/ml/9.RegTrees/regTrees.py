@@ -161,9 +161,7 @@ def createTree(dataSet, leafType=regLeaf, errType=regErr, ops=(1, 4)):
     '''
     if feat is None:
         return val
-    retTree = {}
-    retTree['spInd'] = feat
-    retTree['spVal'] = val
+    retTree = {'spInd': feat, 'spVal': val}
     # 大于在右边，小于在左边，分为2个数据集
     lSet, rSet = binSplitDataSet(dataSet, feat, val)
     # 递归的进行调用，在左右子树中继续递归生成树

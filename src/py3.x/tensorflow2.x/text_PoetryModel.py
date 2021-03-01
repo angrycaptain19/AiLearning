@@ -25,7 +25,7 @@ def preprocess_file(Config):
             # 每行的末尾加上"]"符号代表一首诗结束
             line = re.sub(r"[\]\[（）(){}《》: ]+", "", line.strip())
             files_content += line + "]"
-    
+
     # 按照字存到字典中，字+频率
     words = [i for i in sorted(list(files_content)) if i != "]"]
     counted_words = {}
@@ -42,8 +42,8 @@ def preprocess_file(Config):
 
     words, _ = zip(*wordPairs)
     # word到id的映射
-    word2num = dict((c, i) for i, c in enumerate(words))
-    num2word = dict((i, c) for i, c in enumerate(words))
+    word2num = {c: i for i, c in enumerate(words)}
+    num2word = {i: c for i, c in enumerate(words)}
     word2numF = lambda x: word2num.get(x, 0)
     return word2numF, num2word, words, files_content
 
@@ -103,7 +103,7 @@ class PoetryModel(object):
 
         for c in text:
             seed = seed[1:] + c
-            for j in range(5):
+            for _ in range(5):
                 x_pred = np.zeros((1, self.config.max_len))
                 for t, char in enumerate(seed):
                     x_pred[0, t] = self.word2numF(char)

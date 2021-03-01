@@ -46,12 +46,11 @@ class ItemBasedCF():
         Returns:
             line       行数据，去空格
         """
-        fp = open(filename, 'r')
-        for i, line in enumerate(fp):
-            yield line.strip('\r\n')
-            if i > 0 and i % 100000 == 0:
-                print('loading %s(%s)' % (filename, i), file=sys.stderr)
-        fp.close()
+        with open(filename, 'r') as fp:
+            for i, line in enumerate(fp):
+                yield line.strip('\r\n')
+                if i > 0 and i % 100000 == 0:
+                    print('loading %s(%s)' % (filename, i), file=sys.stderr)
         print('load %s success' % filename, file=sys.stderr)
 
     def generate_dataset(self, filename, pivot=0.7):

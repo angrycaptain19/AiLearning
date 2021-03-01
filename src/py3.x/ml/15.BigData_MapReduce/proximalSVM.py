@@ -35,25 +35,25 @@ def map(key, value):
    print("producedkey\t%s" % (producedvalue))
 
 def reduce(key, values, mu=0.1):
-  sumETE = None
-  sumETDe = None
+   sumETE = None
+   sumETDe = None
 
-  # key isn't used, so ignoring it with _ (underscore).
-  for _, value in values:
-    # unpickle values
-    ETE, ETDe = pickle.loads(base64.b64decode(value))
-    if sumETE == None:
-      # create the I/mu with correct dimensions
-      sumETE = numpy.matrix(numpy.eye(ETE.shape[1])/mu)
-    sumETE += ETE
+     # key isn't used, so ignoring it with _ (underscore).
+   for _, value in values:
+      # unpickle values
+      ETE, ETDe = pickle.loads(base64.b64decode(value))
+      if sumETE is None:
+         # create the I/mu with correct dimensions
+         sumETE = numpy.matrix(numpy.eye(ETE.shape[1])/mu)
+      sumETE += ETE
 
-    if sumETDe == None:
-      # create sumETDe with correct dimensions
-      sumETDe = ETDe
-    else:
-      sumETDe += ETDe
+      if sumETDe is None:
+         # create sumETDe with correct dimensions
+         sumETDe = ETDe
+      else:
+         sumETDe += ETDe
 
-    # note: omega = result[:-1] and gamma = result[-1]
-    # but printing entire vector as output
-    result = sumETE.I*sumETDe
-    print("%s\t%s" % (key, str(result.tolist())))
+      # note: omega = result[:-1] and gamma = result[-1]
+      # but printing entire vector as output
+      result = sumETE.I*sumETDe
+      print("%s\t%s" % (key, str(result.tolist())))

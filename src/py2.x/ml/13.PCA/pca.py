@@ -118,7 +118,7 @@ def analyse_data(dataMat):
     eigValInd = eigValInd[:-(topNfeat+1):-1]
     cov_all_score = float(sum(eigvals))
     sum_cov_score = 0
-    for i in range(0, len(eigValInd)):
+    for i in range(len(eigValInd)):
         line_cov_score = float(eigvals[eigValInd[i]])
         sum_cov_score += line_cov_score
         '''

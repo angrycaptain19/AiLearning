@@ -451,7 +451,7 @@ class Network(object):
             None
         '''
         # 循环迭代 epoch 次
-        for i in range(epoch):
+        for _ in range(epoch):
             # 遍历每个训练样本
             for d in range(len(data_set)):
                 # 使用此样本进行训练（一条样本进行训练）
@@ -726,23 +726,23 @@ def gradient_check(network, sample_feature, sample_label):
     # 获取网络在当前样本下每个连接的梯度
     network.get_gradient(sample_feature, sample_label)
 
-    # 对每个权重做梯度检查    
+    # 增加一个很小的值，计算网络的误差
+    epsilon = 0.0001
+    # 对每个权重做梯度检查
     for conn in network.connections.connections: 
         # 获取指定连接的梯度
         actual_gradient = conn.get_gradient()
-    
-        # 增加一个很小的值，计算网络的误差
-        epsilon = 0.0001
+
         conn.weight += epsilon
         error1 = network_error(network.predict(sample_feature), sample_label)
-    
+
         # 减去一个很小的值，计算网络的误差
         conn.weight -= 2 * epsilon # 刚才加过了一次，因此这里需要减去2倍
         error2 = network_error(network.predict(sample_feature), sample_label)
-    
+
         # 根据式6计算期望的梯度值
         expected_gradient = (error2 - error1) / (2 * epsilon)
-    
+
         # 打印
         print('expected gradient: \t%f\nactual gradient: \t%f' % (expected_gradient, actual_gradient))
 
@@ -762,7 +762,7 @@ def train_data_set():
     data_set = []
     labels = []
     # 0 到 256 ，其中以 8 为步长
-    for i in range(0, 256, 8):
+    for _ in range(0, 256, 8):
         # 调用 normalizer 对象的 norm 方法
         n = normalizer.norm(int(random.uniform(0, 256)))
         # 在 data_set 中 append n

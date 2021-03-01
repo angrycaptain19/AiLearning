@@ -192,8 +192,7 @@ def ridgeRegres(xMat, yMat, lam=0.2):
     if linalg.det(denom) == 0.0:
         print("This matrix is singular, cannot do inverse")
         return
-    ws = denom.I * (xMat.T * yMat)
-    return ws
+    return denom.I * (xMat.T * yMat)
 
 
 def ridgeTest(xArr, yArr):
@@ -249,7 +248,7 @@ def stageWise(xArr, yArr, eps=0.01, numIt=100):
     ws = zeros((n, 1))
     wsTest = ws.copy()
     wsMax = ws.copy()
-    for i in range(numIt):
+    for _ in range(numIt):
         print(ws.T)
         lowestError = inf
         for j in range(n):

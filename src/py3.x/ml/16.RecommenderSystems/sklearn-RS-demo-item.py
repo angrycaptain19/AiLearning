@@ -18,14 +18,11 @@ plt.xlim((-1, 3))
 plt.ylim((-1, 3))
 
 plt.title(u'the distribution of items (NMF)')
-count = 1
-for item in item_distribution:
+for count, item in enumerate(item_distribution, start=1):
     plt.text(
         item[0],
         item[1],
         'item ' + str(count),
         bbox=dict(facecolor='red', alpha=0.2),
     )
-    count += 1
-
 plt.show()

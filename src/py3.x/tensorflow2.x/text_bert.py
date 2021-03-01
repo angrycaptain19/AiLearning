@@ -110,9 +110,7 @@ class TextBert():
     def prepare_data(self):
         neg = pd.read_excel(Config.bert.path_neg, header=None)
         pos = pd.read_excel(Config.bert.path_pos, header=None)
-        data = []
-        for d in neg[0]:
-            data.append((d, 0))
+        data = [(d, 0) for d in neg[0]]
         for d in pos[0]:
             data.append((d, 1))
         # 按照9:1的比例划分训练集和验证集

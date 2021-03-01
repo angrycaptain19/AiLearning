@@ -106,8 +106,7 @@ def calcEk(oS, k):
         Ek  预测结果与真实结果比对，计算误差Ek
     """
     fXk = float(multiply(oS.alphas, oS.labelMat).T * oS.K[:, k] + oS.b)
-    Ek = fXk - float(oS.labelMat[k])
-    return Ek
+    return fXk - float(oS.labelMat[k])
 
 
 def selectJrand(i, m):
@@ -206,8 +205,7 @@ def clipAlpha(aj, H, L):
     Returns:
         aj  目标值
     """
-    if aj > H:
-        aj = H
+    aj = min(aj, H)
     if L > aj:
         aj = L
     return aj
@@ -237,62 +235,64 @@ def innerL(i, oS):
     yi*f(i) == 1 and 0<alpha< C (on the boundary)
     yi*f(i) <= 1 and alpha = C (between the boundary)
     '''
-    if ((oS.labelMat[i] * Ei < -oS.tol) and (oS.alphas[i] < oS.C)) or ((oS.labelMat[i] * Ei > oS.tol) and (oS.alphas[i] > 0)):
-        # 选择最大的误差对应的j进行优化。效果更明显
-        j, Ej = selectJ(i, oS, Ei)
-        alphaIold = oS.alphas[i].copy()
-        alphaJold = oS.alphas[j].copy()
-
-        # L和H用于将alphas[j]调整到0-C之间。如果L==H，就不做任何改变，直接return 0
-        if (oS.labelMat[i] != oS.labelMat[j]):
-            L = max(0, oS.alphas[j] - oS.alphas[i])
-            H = min(oS.C, oS.C + oS.alphas[j] - oS.alphas[i])
-        else:
-            L = max(0, oS.alphas[j] + oS.alphas[i] - oS.C)
-            H = min(oS.C, oS.alphas[j] + oS.alphas[i])
-        if L == H:
-            # print("L==H")
-            return 0
-
-        # eta是alphas[j]的最优修改量，如果eta==0，需要退出for循环的当前迭代过程
-        # 参考《统计学习方法》李航-P125~P128<序列最小最优化算法>
-        eta = 2.0 * oS.K[i, j] - oS.K[i, i] - oS.K[j, j]  # changed for kernel
-        if eta >= 0:
-            print("eta>=0")
-            return 0
-
-        # 计算出一个新的alphas[j]值
-        oS.alphas[j] -= oS.labelMat[j] * (Ei - Ej) / eta
-        # 并使用辅助函数，以及L和H对其进行调整
-        oS.alphas[j] = clipAlpha(oS.alphas[j], H, L)
-        # 更新误差缓存
-        updateEk(oS, j)
-
-        # 检查alpha[j]是否只是轻微的改变，如果是的话，就退出for循环。
-        if (abs(oS.alphas[j] - alphaJold) < 0.00001):
-            # print("j not moving enough")
-            return 0
-
-        # 然后alphas[i]和alphas[j]同样进行改变，虽然改变的大小一样，但是改变的方向正好相反
-        oS.alphas[i] += oS.labelMat[j] * oS.labelMat[i] * (alphaJold - oS.alphas[j])
-        # 更新误差缓存
-        updateEk(oS, i)
-
-        # 在对alpha[i], alpha[j] 进行优化之后，给这两个alpha值设置一个常数b。
-        # w= Σ[1~n] ai*yi*xi => b = yi- Σ[1~n] ai*yi(xi*xj)
-        # 所以:   b1 - b = (y1-y) - Σ[1~n] yi*(a1-a)*(xi*x1)
-        # 为什么减2遍？ 因为是 减去Σ[1~n]，正好2个变量i和j，所以减2遍
-        b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i, i] - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.K[i, j]
-        b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i, j] - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.K[j, j]
-        if (0 < oS.alphas[i]) and (oS.C > oS.alphas[i]):
-            oS.b = b1
-        elif (0 < oS.alphas[j]) and (oS.C > oS.alphas[j]):
-            oS.b = b2
-        else:
-            oS.b = (b1 + b2) / 2.0
-        return 1
-    else:
+    if (oS.labelMat[i] * Ei >= -oS.tol or oS.alphas[i] >= oS.C) and (
+        oS.labelMat[i] * Ei <= oS.tol or oS.alphas[i] <= 0
+    ):
         return 0
+
+    # 选择最大的误差对应的j进行优化。效果更明显
+    j, Ej = selectJ(i, oS, Ei)
+    alphaIold = oS.alphas[i].copy()
+    alphaJold = oS.alphas[j].copy()
+
+    # L和H用于将alphas[j]调整到0-C之间。如果L==H，就不做任何改变，直接return 0
+    if (oS.labelMat[i] != oS.labelMat[j]):
+        L = max(0, oS.alphas[j] - oS.alphas[i])
+        H = min(oS.C, oS.C + oS.alphas[j] - oS.alphas[i])
+    else:
+        L = max(0, oS.alphas[j] + oS.alphas[i] - oS.C)
+        H = min(oS.C, oS.alphas[j] + oS.alphas[i])
+    if L == H:
+        # print("L==H")
+        return 0
+
+    # eta是alphas[j]的最优修改量，如果eta==0，需要退出for循环的当前迭代过程
+    # 参考《统计学习方法》李航-P125~P128<序列最小最优化算法>
+    eta = 2.0 * oS.K[i, j] - oS.K[i, i] - oS.K[j, j]  # changed for kernel
+    if eta >= 0:
+        print("eta>=0")
+        return 0
+
+    # 计算出一个新的alphas[j]值
+    oS.alphas[j] -= oS.labelMat[j] * (Ei - Ej) / eta
+    # 并使用辅助函数，以及L和H对其进行调整
+    oS.alphas[j] = clipAlpha(oS.alphas[j], H, L)
+    # 更新误差缓存
+    updateEk(oS, j)
+
+    # 检查alpha[j]是否只是轻微的改变，如果是的话，就退出for循环。
+    if (abs(oS.alphas[j] - alphaJold) < 0.00001):
+        # print("j not moving enough")
+        return 0
+
+    # 然后alphas[i]和alphas[j]同样进行改变，虽然改变的大小一样，但是改变的方向正好相反
+    oS.alphas[i] += oS.labelMat[j] * oS.labelMat[i] * (alphaJold - oS.alphas[j])
+    # 更新误差缓存
+    updateEk(oS, i)
+
+    # 在对alpha[i], alpha[j] 进行优化之后，给这两个alpha值设置一个常数b。
+    # w= Σ[1~n] ai*yi*xi => b = yi- Σ[1~n] ai*yi(xi*xj)
+    # 所以:   b1 - b = (y1-y) - Σ[1~n] yi*(a1-a)*(xi*x1)
+    # 为什么减2遍？ 因为是 减去Σ[1~n]，正好2个变量i和j，所以减2遍
+    b1 = oS.b - Ei - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i, i] - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.K[i, j]
+    b2 = oS.b - Ej - oS.labelMat[i] * (oS.alphas[i] - alphaIold) * oS.K[i, j] - oS.labelMat[j] * (oS.alphas[j] - alphaJold) * oS.K[j, j]
+    if oS.alphas[i] > 0 and oS.C > oS.alphas[i]:
+        oS.b = b1
+    elif oS.alphas[j] > 0 and oS.C > oS.alphas[j]:
+        oS.b = b2
+    else:
+        oS.b = (b1 + b2) / 2.0
+    return 1
 
 
 def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):

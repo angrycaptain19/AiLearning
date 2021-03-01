@@ -154,9 +154,7 @@ def createTree(dataSet, leafType=regLeaf, errType=regErr, ops=(1, 4)):
     # 如果 splitting 达到一个停止条件，那么返回 val
     if feat is None:
         return val
-    retTree = {}
-    retTree['spInd'] = feat
-    retTree['spVal'] = val
+    retTree = {'spInd': feat, 'spVal': val}
     # 大于在右边，小于在左边，分为2个数据集
     lSet, rSet = binSplitDataSet(dataSet, feat, val)
     # 递归的进行调用，在左右子树中继续递归生成树
@@ -228,20 +226,19 @@ def prune(tree, testData):
     #   * 那么计算一下总方差 和 该结果集的本身不分枝的总方差比较
     #   * 如果 合并的总方差 < 不合并的总方差，那么就进行合并
     # 注意返回的结果:  如果可以合并，原来的dict就变为了 数值
-    if not isTree(tree['left']) and not isTree(tree['right']):
-        lSet, rSet = binSplitDataSet(testData, tree['spInd'], tree['spVal'])
-        # power(x, y)表示x的y次方
-        errorNoMerge = sum(power(lSet[:, -1] - tree['left'], 2)) + sum(power(rSet[:, -1] - tree['right'], 2))
-        treeMean = (tree['left'] + tree['right'])/2.0
-        errorMerge = sum(power(testData[:, -1] - treeMean, 2))
-        # 如果 合并的总方差 < 不合并的总方差，那么就进行合并
-        if errorMerge < errorNoMerge:
-            print("merging")
-            return treeMean
-        else:
-            return tree
-    else:
+    if isTree(tree['left']) or isTree(tree['right']):
         return tree
+
+    lSet, rSet = binSplitDataSet(testData, tree['spInd'], tree['spVal'])
+    # power(x, y)表示x的y次方
+    errorNoMerge = sum(power(lSet[:, -1] - tree['left'], 2)) + sum(power(rSet[:, -1] - tree['right'], 2))
+    treeMean = (tree['left'] + tree['right'])/2.0
+    errorMerge = sum(power(testData[:, -1] - treeMean, 2))
+        # 如果 合并的总方差 < 不合并的总方差，那么就进行合并
+    if errorMerge >= errorNoMerge:
+        return tree
+    print("merging")
+    return treeMean
 
 
 # 得到模型的ws系数: f(x) = x0 + x1*featrue1+ x3*featrue2 ...

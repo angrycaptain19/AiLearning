@@ -301,9 +301,7 @@ def spam_test():
 def calc_most_freq(vocab_list, full_text):
     # RSS源分类器及高频词去除函数
     from operator import itemgetter
-    freq_dict = {}
-    for token in vocab_list:
-        freq_dict[token] = full_text.count(token)
+    freq_dict = {token: full_text.count(token) for token in vocab_list}
     sorted_freq = sorted(freq_dict.items(), key=itemgetter(1), reverse=True)
     return sorted_freq[0:30]
 

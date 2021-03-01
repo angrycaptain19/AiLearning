@@ -282,10 +282,9 @@ def classify(inputTree, featLabels, testVec):
     print('+++', firstStr, 'xxx', secondDict, '---', key, '>>>', valueOfFeat)
     # 判断分枝是否结束: 判断valueOfFeat是否是dict类型
     if isinstance(valueOfFeat, dict):
-        classLabel = classify(valueOfFeat, featLabels, testVec)
+        return classify(valueOfFeat, featLabels, testVec)
     else:
-        classLabel = valueOfFeat
-    return classLabel
+        return valueOfFeat
 
 
 def storeTree(inputTree, filename):

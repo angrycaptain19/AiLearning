@@ -46,12 +46,11 @@ class UserBasedCF():
         Returns:
             line       行数据，去空格
         """
-        fp = open(filename, 'r')
-        for i, line in enumerate(fp):
-            yield line.strip('\r\n')
-            if i > 0 and i % 100000 == 0:
-                print('loading %s(%s)' % (filename, i), file=sys.stderr)
-        fp.close()
+        with open(filename, 'r') as fp:
+            for i, line in enumerate(fp):
+                yield line.strip('\r\n')
+                if i > 0 and i % 100000 == 0:
+                    print('loading %s(%s)' % (filename, i), file=sys.stderr)
         print('load %s success' % filename, file=sys.stderr)
 
     def generate_dataset(self, filename, pivot=0.7):
@@ -92,7 +91,7 @@ class UserBasedCF():
         # build inverse table for item-users
         # key=movieID, value=list of userIDs who have seen this movie
         print('building movie-users inverse table...', file=sys.stderr)
-        movie2users = dict()
+        movie2users = {}
 
         # 同一个电影中，收集用户的集合
         # 统计在所有的用户中，不同电影的总出现次数
@@ -156,7 +155,7 @@ class UserBasedCF():
         ''' Find K similar users and recommend N movies. '''
         K = self.n_sim_user
         N = self.n_rec_movie
-        rank = dict()
+        rank = {}
         watched_movies = self.trainset[user]
 
         # 计算top K 用户的相似度

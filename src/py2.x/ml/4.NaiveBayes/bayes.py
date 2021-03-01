@@ -244,7 +244,7 @@ def spamTest():
     trainingSet = range(50)
     testSet = []
     # 随机取 10 个邮件用来测试
-    for i in range(10):
+    for _ in range(10):
         # random.uniform(x, y) 随机生成一个范围为 x - y 的实数
         randIndex = int(random.uniform(0, len(trainingSet)))
         testSet.append(trainingSet[randIndex])
@@ -298,7 +298,9 @@ def calcMostFreq(vocabList,fullText):
     return sortedFreq[:30]   #返回出现次数最高的30个单词
 def localWords(feed1,feed0):
     import feedparser
-    docList=[];classList=[];fullText=[]
+    docList=[]
+    classList=[]
+    fullText=[]
     minLen=min(len(feed1['entries']),len(feed0['entries']))
     for i in range(minLen):
         wordList=textParse(feed1['entries'][i]['summary'])   #每次访问一条RSS源
@@ -313,12 +315,14 @@ def localWords(feed1,feed0):
     top30Words=calcMostFreq(vocabList,fullText)
     for pairW in top30Words:
         if pairW[0] in vocabList:vocabList.remove(pairW[0])    #去掉出现次数最高的那些词
-    trainingSet=range(2*minLen);testSet=[]
-    for i in range(20):
+    trainingSet=range(2*minLen)
+    testSet=[]
+    for _ in range(20):
         randIndex=int(random.uniform(0,len(trainingSet)))
         testSet.append(trainingSet[randIndex])
         del(trainingSet[randIndex])
-    trainMat=[];trainClasses=[]
+    trainMat=[]
+    trainClasses=[]
     for docIndex in trainingSet:
         trainMat.append(bagOfWords2VecMN(vocabList,docList[docIndex]))
         trainClasses.append(classList[docIndex])

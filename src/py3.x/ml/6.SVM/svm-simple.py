@@ -55,8 +55,7 @@ def clipAlpha(aj, H, L):
     Returns:
         aj  目标值
     """
-    if aj > H:
-        aj = H
+    aj = min(aj, H)
     if L > aj:
         aj = L
     return aj
@@ -158,9 +157,9 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
                 # 为什么减2遍？ 因为是 减去Σ[1~n]，正好2个变量i和j，所以减2遍
                 b1 = b - Ei- labelMat[i]*(alphas[i]-alphaIold)*dataMatrix[i, :]*dataMatrix[i, :].T - labelMat[j]*(alphas[j]-alphaJold)*dataMatrix[i, :]*dataMatrix[j, :].T
                 b2 = b - Ej- labelMat[i]*(alphas[i]-alphaIold)*dataMatrix[i, :]*dataMatrix[j, :].T - labelMat[j]*(alphas[j]-alphaJold)*dataMatrix[j, :]*dataMatrix[j, :].T
-                if (0 < alphas[i]) and (C > alphas[i]):
+                if alphas[i] > 0 and C > alphas[i]:
                     b = b1
-                elif (0 < alphas[j]) and (C > alphas[j]):
+                elif alphas[j] > 0 and C > alphas[j]:
                     b = b2
                 else:
                     b = (b1 + b2)/2.0

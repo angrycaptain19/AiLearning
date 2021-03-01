@@ -146,7 +146,7 @@ class ConvLayer(object):
         self.output_array = np.zeros((self.filter_number,
                                       self.output_height, self.output_width))
         self.filters = []
-        for i in range(filter_number):
+        for _ in range(filter_number):
             self.filters.append(Filter(filter_width,
                                        filter_height, self.channel_number))
         self.activator = activator

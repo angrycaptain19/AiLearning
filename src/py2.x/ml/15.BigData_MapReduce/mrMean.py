@@ -18,12 +18,10 @@ class MRmean(MRJob):
 
     # 接受输入数据流
     def map(self, key, val):  # 需要 2 个参数，求数据的和与平方和
-        if False:
-            yield
         inVal = float(val)
         self.inCount += 1
         self.inSum += inVal
-        self.inSqSum += inVal*inVal
+        self.inSqSum += inVal**2
 
     # 所有输入到达后开始处理
     def map_final(self):  # 计算数据的平均值，平方的均值，并返回

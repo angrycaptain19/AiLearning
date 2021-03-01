@@ -36,10 +36,8 @@ def load_data_set(file_name):
     label_arr = []
     fr = open(file_name)
     for line in fr.readlines():
-        line_arr = []
         cur_line = line.strip().split('\t')
-        for i in range(num_feat - 1):
-            line_arr.append(float(cur_line[i]))
+        line_arr = [float(cur_line[i]) for i in range(num_feat - 1)]
         data_arr.append(line_arr)
         label_arr.append(float(cur_line[-1]))
     return np.matrix(data_arr), label_arr
@@ -130,7 +128,7 @@ def ada_boost_train_ds(data_arr, class_labels, num_it=40):
     # 初始化 D，设置每个特征的权重值，平均分为m份
     D = np.mat(np.ones((m, 1)) / m)
     agg_class_est = np.mat(np.zeros((m, 1)))
-    for i in range(num_it):
+    for _ in range(num_it):
         # 得到决策树的模型
         best_stump, error, class_est = build_stump(data_arr, class_labels, D)
         # print('D: {}'.format(D.T))

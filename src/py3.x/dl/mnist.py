@@ -24,9 +24,8 @@ class Loader(object):
         '''
         读取文件内容
         '''
-        f = open(self.path, 'rb')
-        content = f.read()
-        f.close()
+        with open(self.path, 'rb') as f:
+            content = f.read()
         return list(content)
 
     def to_int(self, byte):
@@ -66,12 +65,8 @@ class ImageLoader(Loader):
         加载数据文件，获得全部样本的输入向量
         '''
         content = self.get_file_content()
-        data_set = []
-        for index in range(self.count):
-            data_set.append(
-                self.get_one_sample(
-                    self.get_picture(content, index)))
-        return data_set
+        return [self.get_one_sample(
+                    self.get_picture(content, index)) for index in range(self.count)]
 
 
 # 标签数据加载器
@@ -81,10 +76,7 @@ class LabelLoader(Loader):
         加载数据文件，获得全部样本的标签向量
         '''
         content = self.get_file_content()
-        labels = []
-        for index in range(self.count):
-            labels.append(self.norm(content[index + 8]))
-        return labels
+        return [self.norm(content[index + 8]) for index in range(self.count)]
 
     def norm(self, label):
         '''
@@ -123,10 +115,7 @@ def show(sample):
     str = ''
     for i in range(28):
         for j in range(28):
-            if sample[i*28+j] != 0:
-                str += '*'
-            else:
-                str += ' '
+            str += '*' if sample[i*28+j] != 0 else ' '
         str += '\n'
     print(str)
 

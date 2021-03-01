@@ -31,10 +31,8 @@ def loadDataSet(fileName):
     labelArr = []
     fr = open(fileName)
     for line in fr.readlines():
-        lineArr = []
         curLine = line.strip().split('\t')
-        for i in range(numFeat-1):
-            lineArr.append(float(curLine[i]))
+        lineArr = [float(curLine[i]) for i in range(numFeat-1)]
         dataArr.append(lineArr)
         labelArr.append(float(curLine[-1]))
     return dataArr, labelArr
@@ -145,7 +143,7 @@ def adaBoostTrainDS(dataArr, labelArr, numIt=40):
     # 初始化 D，设置每行数据的样本的所有特征权重集合，平均分为m份
     D = mat(ones((m, 1))/m)
     aggClassEst = mat(zeros((m, 1)))
-    for i in range(numIt):
+    for _ in range(numIt):
         # 得到决策树的模型
         bestStump, error, classEst = buildStump(dataArr, labelArr, D)
 
